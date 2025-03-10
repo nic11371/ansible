@@ -1,0 +1,8 @@
+-hosts: all
+  vars: 
+    server_name: 10.128.0.20
+    string: This is server {{}}!
+    date: ansible_date_time['date']
+    time: ansible_date_time['time']
+  tasks:
+    ansible.builtin.debug: msg={{ string | upper }}

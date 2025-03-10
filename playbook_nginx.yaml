@@ -2,6 +2,9 @@
   vars:
     nginx_port: 80
     root_dir: /usr/share/nginx/html
+    string: This is server {{ server_name }}!
+    date: "{{ansible_date_time['date']}}"
+    time: "{{ansible_date_time['time']}}"
   tasks:
     - name: install nginx
       ansible.builtin.apt:
@@ -10,7 +13,9 @@
         update-cache: yes
       become: yes
       tags: [nginx, apps]
-  
+
+    - ansible.builtin.debug: msg={{ string | upper }}
+
     - name: update nginx index
       ansible.builtin.template:
         src: files/index.html
@@ -19,6 +24,7 @@
         - restart nginx
       become: yes
       tags: [index, nginx]
+
 
     - name: update nginx config
       ansible.builtin.template:
