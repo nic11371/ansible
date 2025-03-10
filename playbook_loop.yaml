@@ -1,0 +1,67 @@
+- hosts: servers
+  gather_facts: no
+  vars:
+    users:
+      - jaime
+      - john
+      - robert
+  tasks:
+    - name: install git
+      ansible.builtin.apt:
+        name: git
+        state: present
+        update-cache: yes
+      become: yes
+      tags: [git, apps]
+
+    - name: install make
+      ansible.builtin.apt:
+        name: make
+        state: present
+        update-cache: yes
+      become: yes
+      tags: [make, apps]
+
+    - name: install nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update-cache: yes
+      become: yes
+      tags: [nginx, apps]
+
+    - name: create users
+      ansible.builtin.user:
+        name: "{{ item }}"
+        state: present
+        shell: /bin/bash
+        createhome: yes
+      loop: "{{ users }}"
+      become: yes
+      tags: users
+    
+    - name: git config
+      ansible.builtin.template:
+        owner: "{{ item }}"
+        src: files/.gitconfig
+        dest:  "/home/{{item}}/.gitconfig"
+      loop: "{{ users }}"
+      become: yes
+      tags: git
+    
+    - name: Creates directory
+      ansible.builtin.file:
+        owner: "{{ item }}"
+        path: "/home/{{item}}/.ssh/authorized_keys/"
+        state: directory
+      loop: "{{ users }}"
+      become: yes
+
+    - name: ssh public
+      ansible.builtin.template:
+        owner: "{{ item }}"
+        src: files/id_ed25519.pub
+        dest:  "/home/{{item}}/.ssh/authorized_keys/id_ed25519.pub"
+      loop: "{{ users }}"
+      become: yes
+      tags: pubkey
