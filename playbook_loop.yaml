@@ -1,5 +1,4 @@
 - hosts: servers
-  gather_facts: no
   vars:
     users:
       - jaime
@@ -8,27 +7,15 @@
   tasks:
     - name: install git
       ansible.builtin.apt:
-        name: git
+        name: "{{ item }}"
         state: present
         update-cache: yes
+      loop: 
+        - git
+        - make
+        - nginx
       become: yes
       tags: [git, apps]
-
-    - name: install make
-      ansible.builtin.apt:
-        name: make
-        state: present
-        update-cache: yes
-      become: yes
-      tags: [make, apps]
-
-    - name: install nginx
-      ansible.builtin.apt:
-        name: nginx
-        state: present
-        update-cache: yes
-      become: yes
-      tags: [nginx, apps]
 
     - name: create users
       ansible.builtin.user:
@@ -37,7 +24,7 @@
         shell: /bin/bash
         createhome: yes
       loop: "{{ users }}"
-      when: ansible_distribution == "Ubuntu"
+      when: ansible_os_family == "Debian"
       become: yes
       tags: users
     
@@ -47,7 +34,7 @@
         src: files/.gitconfig
         dest:  "/home/{{item}}/.gitconfig"
       loop: "{{ users }}"
-      when: ansible_distribution == "Ubuntu"
+      when: ansible_os_family == "Debian"
       become: yes
       tags: git
 
@@ -57,6 +44,6 @@
         src: files/authorized_keys
         dest:  "/home/{{item}}/.ssh/authorized_keys"
       loop: "{{ users }}"
-      when: ansible_distribution == "Ubuntu"
+      when: ansible_os_family == "Debian"
       become: yes
       tags: pubkey
