@@ -14,6 +14,18 @@
       become: yes
       tags: [nginx, apps]
 
+    - name: install cowsay
+      ansible.builtin.apt:
+        name: cowsay
+        state: present
+        update-cache: yes
+      become: yes
+      tags: [cowsay, apps]
+    
+    - name: cowsay command
+      ansible.builtin.command: "cowsay 'This is server {{server_name}}!'"
+      register: cowsay_result
+
     - ansible.builtin.debug: msg={{ string | upper }}
 
     - name: update nginx index
@@ -24,7 +36,6 @@
         - restart nginx
       become: yes
       tags: [index, nginx]
-
 
     - name: update nginx config
       ansible.builtin.template:

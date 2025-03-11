@@ -10,5 +10,8 @@
   <h1>Hello World!</h1>
   <h2>{{ string }}</h2> <!-- Эта строка была приведена в верхний регистр с помощью фильтра -->
   <small>Deployed at: {{ date }} {{ time }}</small> <!-- Локализованная дата -->
+  <pre><code>
+    {{ cowsay_result.stdout_lines | join('\n ')}}
+  </code></pre>
 </body>
 </html>
