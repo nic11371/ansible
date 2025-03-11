@@ -1,0 +1,30 @@
+- hosts: servers
+  roles:
+    - nginxinc.nginx
+    - snagoor.aap_common
+    # - git
+    # - postgres
+    # - nodejs
+  
+  tasks:
+    - name: install nginx
+      import_role:
+        name: nginxinc.nginx
+      become: yes
+    
+    - name: install common
+      import_role:
+        name: snagoor.aap_common
+      become: yes
+
+    # - name: install git
+    #   import_role:
+    #     name: git
+
+    # - name: install postgres
+    #   import_role:
+    #     name: postgres
+
+    # - name: install nodejs
+    #   import_role:
+    #     name: nodejs
