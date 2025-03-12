@@ -1,4 +1,5 @@
 - hosts: servers
+  become: true
   roles:
     - nginxinc.nginx
     - snagoor.aap_common
