@@ -1,0 +1,38 @@
+- hosts: servers
+  roles:
+    - hexlet.environment
+  vars:
+    username: 'jaime'
+    email: 'test@mail.com'
+    ssh_public_key: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM2df0SHpDgmzgh4iNRbpNacdOhBi4Q8IfPjEq4AjOma'
+
+  tasks:
+    - name: Retrieve file statuses
+      ansible.builtin.stat:
+        path: '/home/{{ username }}/{{ item }}'
+      register: result
+      loop:
+        - .gitconfig
+        - .bashrc
+        - .ssh/authorized_keys
+
+    - name: Check that all files exist
+      ansible.builtin.fail:
+        msg: "File `{{ item.item }}` was not created or its name is incorrect"
+      when: not item.stat.exists
+      loop: "{{ result.results }}"
+
+    - name: Read files content
+      shell: 'cat /home/{{ username }}/{{ item }}'
+      register: content
+      loop:
+        - .gitconfig
+        - .bashrc
+        - .ssh/authorized_keys
+
+    - name: Check file content
+      ansible.builtin.fail:
+        msg: "Expected that the file contains text '{{ file_contents }}', but received '{{ content }}'"
+      when: content == ''
+      loop: "{{ result.results }}"
+
