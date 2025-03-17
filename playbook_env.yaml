@@ -2,7 +2,7 @@
   roles:
     - hexlet.environment
   vars:
-    username: 'jaime'
+    username: 'nic11371'
     email: 'test@mail.com'
     ssh_public_key: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM2df0SHpDgmzgh4iNRbpNacdOhBi4Q8IfPjEq4AjOma'
 

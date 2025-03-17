@@ -1,0 +1,7 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for hexlet.environment
+
+username: ''
+email: ''
+ssh_public_key: ''

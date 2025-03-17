@@ -1,0 +1,30 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for hexlet.environment
+
+- name: Create user's home directory
+  file:
+    path: /home/{{ username }}
+    state: directory
+    mode: 0755
+
+- name: Create .bashrc file
+  ansible.builtin.template:
+    src: files/.bashrc.j2
+    dest: /home/{{ username }}/.bashrc
+
+- name: Create .gitconfig file
+  ansible.builtin.template:
+    src: files/.gitconfig.j2
+    dest: /home/{{ username }}/.gitconfig
+
+- name: Create .ssh directory
+  ansible.builtin.file:
+    path: /home/{{ username }}/.ssh
+    state: directory
+    mode: 0700
+
+- name: Add SSH public key
+  ansible.posix.authorized_key:
+    user: "{{ username }}"
+    key: "{{ ssh_public_key }}"
